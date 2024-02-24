@@ -1,6 +1,10 @@
 from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+#Cloudinary imports
+import cloudinary
+import cloudinary.api
+import cloudinary.uploader
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -17,7 +21,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
     'corsheaders',
+    'cloudinary',
     'gennotate'
 ]
 CORS_ALLOWED_ORIGINS = ['http://localhost:5173']
@@ -84,3 +90,9 @@ STATIC_URL = 'static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# Cloudinary - Django integrations
+cloudinary.config(
+    cloud_name="dnmy80tpe",
+    api_key="129158289711455",
+    api_secret="P-sbSnwtedxRVTRc1zWvdHActt8"
+)
