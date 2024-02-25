@@ -1,20 +1,26 @@
 from django.db import models
 from django.contrib.auth.models import User
-# from cloudinary.models import CloudinaryField
+from cloudinary.models import CloudinaryField
+
 # Create your models here.
+class TestModel(models.Model):
+    id = models.AutoField(primary_key=True)
+    image = CloudinaryField('image')
+    def __str__(self):
+        return f"Image # {self.id}"
 class GeneratedImage(models.Model):
     id = models.AutoField(primary_key=True)
     userId = models.ForeignKey(User, on_delete=models.CASCADE)
-    link = models.URLField(max_length=200)
+    link = CloudinaryField('image')
     type = models.CharField(max_length=40)
-    addToGallery = models.CharField(max_length=40)
-    annotations = models.TextField(max_length=1000)
+    addToGallery = models.IntegerField(default=0)
+    annotations = models.TextField(max_length=1000, default="")
     def __str__(self):
         return f"Generated Image # {self.id} >> {self.userId}"
 class SegmentedImage(models.Model):
     id = models.AutoField(primary_key=True)
     generatedImageId = models.ForeignKey(GeneratedImage, on_delete=models.CASCADE)
-    link = models.URLField(max_length=200)
-    annotations = models.TextField(max_length=1000)
+    link = CloudinaryField('image')
+    annotations = models.TextField(max_length=1000, default="")
     def __str__(self):
         return f"Segmented Image # {self.id} >> {self.generatedImageId}"
