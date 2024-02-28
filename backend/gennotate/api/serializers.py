@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from ..models import GeneratedImage, SegmentedImage, TestModel
+from ..models import GeneratedImage, SegmentedImage
 from django.contrib.auth.models import User
 class UserSerializer(ModelSerializer):
     class Meta:
@@ -13,7 +13,3 @@ class SegmentedImageSerializer(ModelSerializer):
     class Meta:
         model = SegmentedImage
         fields = ['id', 'generatedImageId', 'link', 'annotations']
-class TestModelSerializer(ModelSerializer):
-    class Meta:
-        model = TestModel
-        fields = ['id', 'image']

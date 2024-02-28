@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
-from ..models import GeneratedImage, SegmentedImage, TestModel
+from ..models import GeneratedImage, SegmentedImage
 from django.contrib.auth.models import User
-from .serializers import UserSerializer, GeneratedImageSerializer, SegmentedImageSerializer, TestModelSerializer
+from .serializers import UserSerializer, GeneratedImageSerializer, SegmentedImageSerializer
 
 class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
@@ -12,6 +12,3 @@ class GeneratedImageViewSet(ModelViewSet):
 class SegmentedImageViewSet(ModelViewSet):
     queryset = SegmentedImage.objects.all()
     serializer_class = SegmentedImageSerializer
-class TestModelViewSet(ModelViewSet):
-    queryset = TestModel.objects.all()
-    serializer_class = TestModelSerializer

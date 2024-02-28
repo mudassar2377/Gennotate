@@ -155,6 +155,51 @@ const App = () => {
     const nums = document.getElementById("nums").value
     generateImages({ "userId": user, type: type, num: nums });
   }
+  const loadModel = (obj) =>{
+    fetch(`http://127.0.0.1:8000/loadModel/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(obj),
+    })
+    .then((response) => {
+      if (!response.ok) {
+        console.log(response)
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then((responseData) => {
+      console.log('Success:', responseData);
+    })
+    .catch((error) => {
+      console.log('Error:', error.message || 'An error occurred.');
+    });
+  }
+  const test = (obj) =>{
+    fetch(`https://test2-hashir789.vercel.app/func/`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // body: JSON.stringify(obj),
+    })
+    .then((response) => {
+      if (!response.ok) {
+        console.log(response)
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then((responseData) => {
+      console.log('Success:', responseData);
+    })
+    .catch((error) => {
+      console.log('Error:', error.message || 'An error occurred.');
+    });
+  }
+
   return (
     <div>
       <hr/>
@@ -201,7 +246,6 @@ const App = () => {
         <input type="submit" value="Submit"/>
       </form>
       <div>Generated Images: {imgs}</div>
-      {/* <img src='https://res.cloudinary.com/dnmy80tpe/image/upload/v1708757919/mayycobgdfpvzwst9s5g.jpg' alt='' width={300}/> */}
       <div>
         <hr/>
         {links.map((link, index) => (
@@ -211,7 +255,9 @@ const App = () => {
           </div>
           ))}
       </div>
-      <hr/>
+      {/* <hr/> */}
+      <button onClick={()=>{ loadModel({ "slen": 3, "swid": 3, "plen": 3, "pwid": 3 }); }}>OK</button>
+          <button onClick={()=>{ test(); }}>ABC</button>
     </div>
   )
 }

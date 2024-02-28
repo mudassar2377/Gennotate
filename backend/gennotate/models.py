@@ -3,11 +3,6 @@ from django.contrib.auth.models import User
 from cloudinary.models import CloudinaryField
 
 # Create your models here.
-class TestModel(models.Model):
-    id = models.AutoField(primary_key=True)
-    image = CloudinaryField('image')
-    def __str__(self):
-        return f"Image # {self.id}"
 class GeneratedImage(models.Model):
     id = models.AutoField(primary_key=True)
     userId = models.ForeignKey(User, on_delete=models.CASCADE)

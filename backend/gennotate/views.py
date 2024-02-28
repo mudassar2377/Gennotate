@@ -13,6 +13,12 @@ from .models import GeneratedImage
 import numpy as np
 import cloudinary.uploader
 from io import BytesIO
+import torch
+import torchvision
+import math
+import os
+from labml_nn.gan.stylegan import Generator, MappingNetwork
+# modell = joblib.load('./savedModels/model1.joblib')
 @api_view(['POST'])
 def login(request):
     user = get_object_or_404(User, username=request.data['username'])
@@ -37,33 +43,33 @@ def signup(request):
 @permission_classes([IsAuthenticated])
 def test_token(request):
     return Response(request.user.username)
-@api_view(['POST'])
-def generateImages(request):
-    if request.method == 'POST':
-        userId = request.data.get('userId')
-        user_instance = User.objects.get(id=userId)
-        type = request.data.get('type')
-        num = int(request.data.get('num'))
-        for _ in range (num):
-            your_numpy_array = np.zeros((300, 300, 3)).astype('uint8')
-            if type == "Normal":
-                your_numpy_array[:, :, 0] = 255
-            elif type == "CNV":
-                your_numpy_array[0:50, :, 1] = 255
-                your_numpy_array[100:150, :, 1] = 255
-                your_numpy_array[200:250, :, 1] = 255
-            else:
-                your_numpy_array[0:200, :, 0] = 255
-            img = Image.fromarray(your_numpy_array.astype('uint8'))
-            img_bytes = BytesIO()
-            img.save(img_bytes, format='PNG')
-            img_bytes = img_bytes.getvalue()
-            cloudinary_response = cloudinary.uploader.upload(img_bytes)
-            cloudinary_url = cloudinary_response.get("url")
-            generated_image_instance = GeneratedImage(userId=user_instance, link=cloudinary_url, type=type)
-            generated_image_instance.save()
-        return Response({"message": "Data added to the database"}, status=status.HTTP_201_CREATED)
-    return Response({"message": "Hello, world!!!"})
+# @api_view(['POST'])
+# def generateImages(request):
+#     if request.method == 'POST':
+#         userId = request.data.get('userId')
+#         user_instance = User.objects.get(id=userId)
+#         type = request.data.get('type')
+#         num = int(request.data.get('num'))
+#         for _ in range (num):
+#             your_numpy_array = np.zeros((300, 300, 3)).astype('uint8')
+#             if type == "Normal":
+#                 your_numpy_array[:, :, 0] = 255
+#             elif type == "CNV":
+#                 your_numpy_array[0:50, :, 1] = 255
+#                 your_numpy_array[100:150, :, 1] = 255
+#                 your_numpy_array[200:250, :, 1] = 255
+#             else:
+#                 your_numpy_array[0:200, :, 0] = 255
+#             img = Image.fromarray(your_numpy_array.astype('uint8'))
+#             img_bytes = BytesIO()
+#             img.save(img_bytes, format='PNG')
+#             img_bytes = img_bytes.getvalue()
+#             cloudinary_response = cloudinary.uploader.upload(img_bytes)
+#             cloudinary_url = cloudinary_response.get("url")
+#             generated_image_instance = GeneratedImage(userId=user_instance, link=cloudinary_url, type=type)
+#             generated_image_instance.save()
+#         return Response({"message": "Data added to the database"}, status=status.HTTP_201_CREATED)
+#     return Response({"message": "Hello, world!!!"})
 @api_view(['GET'])
 def getGeneratedImages(request):
     if request.method == 'GET':
@@ -79,3 +85,105 @@ def getGeneratedImages(request):
         else:
             return Response({"message": "userId parameter is missing"}, status=status.HTTP_400_BAD_REQUEST)
     return Response({"message": "Hello, world!!!"})
+@api_view(['POST'])
+def loadModel(request):
+    if request.method == 'POST':
+        print(request.data.get('slen'))
+        print(request.data.get('swid'))
+        print(request.data.get('plen'))
+        print(request.data.get('pwid'))
+        # listA = [request.data.get('slen'), request.data.get('swid'), request.data.get('plen'), request.data.get('pwid')]
+    #     y_pred = modell.predict([[listA[0], listA[1], listA[2], listA[3]]])
+    #     print(len(y_pred))
+    #     if y_pred[0] == 0:
+    #         y_pred = 'Setosa'
+    #     elif y_pred[0] == 1:
+    #         y_pred = 'Versicolor'
+    #     else:
+    #         y_pred = 'Virginica'
+    #     return Response({"message": y_pred})
+    return Response({"message": "Hello, world!!!"})
+#===================================================================================================
+def get_w(log_resolution, d_latent, device, mapping_network, batch_size: int):
+        style_mixing_prob: float = 0.9
+        n_features: int = 32 
+        max_features: int = 512
+        features = [min(max_features, n_features * (2 ** i)) for i in range(log_resolution - 2, -1, -1)]
+        n_blocks = len(features)
+        n_gen_blocks = n_blocks
+        if torch.rand(()).item() < style_mixing_prob:
+            cross_over_point = int(torch.rand(()).item() * n_gen_blocks)
+            z2 = torch.randn(batch_size, d_latent).to(device)
+            z1 = torch.randn(batch_size, d_latent).to(device)
+            w1 = mapping_network(z1)
+            w2 = mapping_network(z2)
+            w1 = w1[None, :, :].expand(cross_over_point, -1, -1)
+            w2 = w2[None, :, :].expand(n_gen_blocks - cross_over_point, -1, -1)
+            return torch.cat((w1, w2), dim=0)
+        else:
+            z = torch.randn(batch_size, d_latent).to(device)
+            w = mapping_network(z)
+            return w[None, :, :].expand(n_gen_blocks, -1, -1)
+def get_noise(log_resolution, device, batch_size: int):
+        noise = []
+        resolution = 4
+        n_features: int = 32 
+        max_features: int = 512
+        features = [min(max_features, n_features * (2 ** i)) for i in range(log_resolution - 2, -1, -1)]
+        n_blocks = len(features)
+        n_gen_blocks = n_blocks
+        for i in range(n_gen_blocks):
+            if i == 0:
+                n1 = None
+            else:
+                n1 = torch.randn(batch_size, 1, resolution, resolution, device=device)
+            n2 = torch.randn(batch_size, 1, resolution, resolution, device=device)
+            noise.append((n1, n2))
+            resolution *= 2
+        return noise
+def generate_images(generator, log_resolution, d_latent, device, mapping_network, batch_size: int):
+        w = get_w(batch_size=batch_size, log_resolution=log_resolution, d_latent=d_latent, device=device, mapping_network=mapping_network)
+        noise = get_noise(batch_size=batch_size, log_resolution=log_resolution, device=device)
+        images = generator(w, noise)
+        return images, w
+@api_view(['POST'])
+def generateImages(request):
+    if request.method == 'POST':
+        Generator_path = './savedModels/generator.pth'
+        Mapping_network_path = './savedModels/mapping_network.pth'
+        d_latent: int = 512
+        image_size = 256
+        mapping_network_layers: int = 8
+        log_resolution = int(math.log2(image_size))
+        if torch.cuda.is_available():
+            device = torch.device("cuda")
+            print("GPU is available. Using GPU.")
+        else:  
+            device = torch.device("cpu")
+            print("GPU is not available. Using CPU.")
+        generator = Generator(log_resolution=log_resolution ,d_latent=d_latent).to(device)
+        generator.load_state_dict(torch.load(Generator_path,map_location=device))
+        generator.eval()
+        mapping_network = MappingNetwork(d_latent,mapping_network_layers).to(device)
+        mapping_network.load_state_dict(torch.load(Mapping_network_path,map_location=device))
+        mapping_network.eval()
+        userId = request.data.get('userId')
+        user_instance = User.objects.get(id=userId)
+        num = int(request.data.get('num'))
+        total_images = num
+        os.system('cls')
+        for i in range(0,total_images):
+            torch.cuda.empty_cache()
+            batch_size = 1
+            imgs, w = generate_images(generator, log_resolution, d_latent, device, mapping_network, batch_size)
+            for r in range(batch_size):
+                image = torchvision.transforms.ToPILImage()(imgs[r])
+                img_bytes = BytesIO()
+                image.save(img_bytes, format='PNG')
+                img_bytes = img_bytes.getvalue()
+                cloudinary_response = cloudinary.uploader.upload(img_bytes)
+                cloudinary_url = cloudinary_response.get("url")
+                generated_image_instance = GeneratedImage(userId=user_instance, link=cloudinary_url, type=type)
+                generated_image_instance.save()
+        return Response({"message": "Data added to the database"}, status=status.HTTP_201_CREATED)
+    return Response({"message": "Nothing"}, status=status.HTTP_201_CREATED)
