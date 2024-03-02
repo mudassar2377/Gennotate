@@ -33,7 +33,7 @@ const LoginCard = () => {
   return (
     <Box>
         <Box my={2}><Typography sx={{ fontFamily: "'Lateef', serif", fontSize: '15vw', fontWeight: '700', color: 'white' ,display: { xs: 'block', sm: 'none' } }} textAlign='center'>Gennotate</Typography></Box>
-        <Card sx={{ width: {xs: '90vw', sm: '30vw'}, boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.75)', paddingLeft: '10px', paddingRight: '10px' }}>
+        <Card sx={{ width: {xs: '90vw', sm: '30vw'}, boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.75)', paddingLeft: '10px', paddingRight: '10px', maxWidth: 500 }}>
             <CardContent>
                 <form onSubmit={handleLogin}>
                     <Box mt={3}>
