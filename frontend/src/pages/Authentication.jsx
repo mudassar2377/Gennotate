@@ -8,11 +8,12 @@ import gennotateContext from '../gennotateContext/gennotateContext';
 
 const Authentication = () => {
   const context = useContext(gennotateContext);
-  const { authentication, authenticationMsg } = context;
+  const { authentication, authenticationMsg, setHandleNavbar2 } = context;
   const navigate = useNavigate();
   useEffect(() => {
     if (authenticationMsg === 'Success') {
-      navigate('/gallery');
+      navigate('/home');
+      setHandleNavbar2(1);
     }
   }, [authenticationMsg]);
   return (
@@ -20,7 +21,7 @@ const Authentication = () => {
         <Grid container>
             <Grid item xs={12} sm={7} sx={{ height: '100vh', display: { xs: 'none', sm: 'flex' } }}>
               <Box sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', width: '50vw' }}>
-                <Typography sx={{ fontFamily: "'Lateef', serif", fontSize: '8vw', fontWeight: '700', color: 'white', lineHeight: 1, width: '100%' }} textAlign='center'>Gennotate</Typography>
+                <Typography sx={{ fontFamily: "'Lateef', serif", fontSize: '8vw', fontWeight: '700', lineHeight: 1, width: '100%', color: '#154D4F' }} textAlign='center'>Gennotate</Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Typography sx={{ fontFamily: "'Lateef', serif", fontSize: '2vw', color: 'white', marginLeft: 'auto', marginRight: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'left' }} textAlign='left'>{authentication} to continue access page&nbsp;<FaAngleRight size='1.5vw'/></Typography>
                 </Box>

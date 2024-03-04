@@ -7,6 +7,5 @@ urlpatterns = [
     re_path('api/signup/', views.signup, name='signup'),
     re_path('api/login/', views.login, name='login'),
     path('generateImages/', views.generateImages, name='generateImages'),
-    path('getGeneratedImages/', views.getGeneratedImages, name='getGeneratedImages'),
-    path('loadModel/', views.loadModel, name='loadModel'),
+    path('getGeneratedImages/', views.getGeneratedImages, name='getGeneratedImages')
 ]

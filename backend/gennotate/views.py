@@ -43,33 +43,6 @@ def signup(request):
 @permission_classes([IsAuthenticated])
 def test_token(request):
     return Response(request.user.username)
-# @api_view(['POST'])
-# def generateImages(request):
-#     if request.method == 'POST':
-#         userId = request.data.get('userId')
-#         user_instance = User.objects.get(id=userId)
-#         type = request.data.get('type')
-#         num = int(request.data.get('num'))
-#         for _ in range (num):
-#             your_numpy_array = np.zeros((300, 300, 3)).astype('uint8')
-#             if type == "Normal":
-#                 your_numpy_array[:, :, 0] = 255
-#             elif type == "CNV":
-#                 your_numpy_array[0:50, :, 1] = 255
-#                 your_numpy_array[100:150, :, 1] = 255
-#                 your_numpy_array[200:250, :, 1] = 255
-#             else:
-#                 your_numpy_array[0:200, :, 0] = 255
-#             img = Image.fromarray(your_numpy_array.astype('uint8'))
-#             img_bytes = BytesIO()
-#             img.save(img_bytes, format='PNG')
-#             img_bytes = img_bytes.getvalue()
-#             cloudinary_response = cloudinary.uploader.upload(img_bytes)
-#             cloudinary_url = cloudinary_response.get("url")
-#             generated_image_instance = GeneratedImage(userId=user_instance, link=cloudinary_url, type=type)
-#             generated_image_instance.save()
-#         return Response({"message": "Data added to the database"}, status=status.HTTP_201_CREATED)
-#     return Response({"message": "Hello, world!!!"})
 @api_view(['GET'])
 def getGeneratedImages(request):
     if request.method == 'GET':
@@ -84,24 +57,6 @@ def getGeneratedImages(request):
                 return Response({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         else:
             return Response({"message": "userId parameter is missing"}, status=status.HTTP_400_BAD_REQUEST)
-    return Response({"message": "Hello, world!!!"})
-@api_view(['POST'])
-def loadModel(request):
-    if request.method == 'POST':
-        print(request.data.get('slen'))
-        print(request.data.get('swid'))
-        print(request.data.get('plen'))
-        print(request.data.get('pwid'))
-        # listA = [request.data.get('slen'), request.data.get('swid'), request.data.get('plen'), request.data.get('pwid')]
-    #     y_pred = modell.predict([[listA[0], listA[1], listA[2], listA[3]]])
-    #     print(len(y_pred))
-    #     if y_pred[0] == 0:
-    #         y_pred = 'Setosa'
-    #     elif y_pred[0] == 1:
-    #         y_pred = 'Versicolor'
-    #     else:
-    #         y_pred = 'Virginica'
-    #     return Response({"message": y_pred})
     return Response({"message": "Hello, world!!!"})
 #===================================================================================================
 def get_w(log_resolution, d_latent, device, mapping_network, batch_size: int):
