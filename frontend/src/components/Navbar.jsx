@@ -28,14 +28,14 @@ const Navbar = () => {
           </Box>
           <Box sx={{ display: {xs: 'none', sm: 'flex'}, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
             <Box mr={1}><FaCaretDown style={{  color: '#154d4f', background: 'inherit' }} size={'1.25vw'}/></Box>
-            <Box mr={6}><FaCircleUser style={{  color: '#154d4f', background: 'inherit' }} size={'2.5vw'}/></Box>
+            <Box mr={6}><FaCircleUser style={{  color: '#154d4f', background: 'inherit' }} size={'2vw'}/></Box>
           </Box>
           <Box mr={6}sx={{ display: {xs: 'flex', sm: 'none'} }}>
             <Checkbox onChange={()=>{ setOpenNav(!openNav); }} icon={<FaBars style={{  color: '#154d4f', background: 'inherit' }} size={26}/>} checkedIcon={<FaXmark style={{  color: '#154d4f', background: 'inherit' }} size={26}/>} />  
           </Box>
         </Box>
         <Box px={6} pb={2} sx={{ display: { xs: 'flex', sm: 'none' }, flexDirection: 'column' }}>
-            {navList.map((item) => (<Link to={item.link} key={item.id}><Box onClick={()=>{ setHandleNavbar2(item.id); }} onMouseEnter={() => setHandleNavbar1(item.id)} onMouseLeave={() => setHandleNavbar1(0)} sx={{ ':hover': { cursor: 'pointer' }, height: '100%' }} mb={1} >
+            {navList.map((item) => (<Link to={item.link} key={item.id} style={{ textDecoration: 'none', color: 'white' }}><Box onClick={()=>{ setHandleNavbar2(item.id); }} onMouseEnter={() => setHandleNavbar1(item.id)} onMouseLeave={() => setHandleNavbar1(0)} sx={{ ':hover': { cursor: 'pointer' }, height: '100%' }} mb={1} >
               <Typography sx={{ fontSize: '5vw', color: (handleNavbar1 === item.id || handleNavbar2 === item.id) ? '#154d4f' : 'inherit', fontWeight: 'bold' }} px={1} >{item.title}</Typography>
               <Box sx={{ width: (handleNavbar1 === item.id || handleNavbar2 === item.id) ? '100%' : '1%', background: (handleNavbar1 === item.id || handleNavbar2 === item.id) ? '#154d4f' : 'inherit', height: '0.7vw', transition: '0.5s ease width' }}></Box>
             </Box></Link>))}

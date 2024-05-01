@@ -34,7 +34,7 @@ const GenerateCard = () => {
                         <Typography sx={{ fontSize: '1.2vw', color: '#154D4F' }} textAlign='left'>Healthy Images: </Typography>
                     </Box>
                     <Box sx={{ width: {xs: '100%', sm: '70%'} }}>
-                        <TextField name='healthy' label="Number of Healthy OCT Images" variant="standard" fullWidth color='success' type='text' defaultValue='0'/>
+                        <TextField name='healthy' label="Number of Healthy OCT Images" variant="standard" fullWidth color='success' type='number' defaultValue={0}/>
                     </Box>
                 </Box>
                 <Box my={{ xs: '4vw', sm: '1vw' }} sx={{ display: 'flex' }} mx={'1vw'}>
@@ -42,7 +42,7 @@ const GenerateCard = () => {
                         <Typography sx={{ fontSize: '1.2vw', color: '#154D4F' }} textAlign='left'>CNV Images: </Typography>
                     </Box>
                     <Box sx={{ width: {xs: '100%', sm: '70%'} }}>
-                        <TextField name='cnv' label="Number of CNV OCT Images" variant="standard" fullWidth color='success' type='text' defaultValue='0'/>
+                        <TextField name='cnv' label="Number of CNV OCT Images" variant="standard" fullWidth color='success' type='number' defaultValue={0}/>
                     </Box>
                 </Box>
                 <Box my={{ xs: '4vw', sm: '1vw' }} sx={{ display: 'flex' }} mx={'1vw'}>
@@ -50,7 +50,7 @@ const GenerateCard = () => {
                         <Typography sx={{ fontSize: '1.2vw', color: '#154D4F' }} textAlign='left'>DME Images: </Typography>
                     </Box>
                     <Box sx={{ width: {xs: '100%', sm: '70%'} }}>
-                        <TextField name='dme' label="Number of DME OCT Images" variant="standard" fullWidth color='success' type='text' defaultValue='0'/>
+                        <TextField name='dme' label="Number of DME OCT Images" variant="standard" fullWidth color='success' type='number' defaultValue={0}/>
                     </Box>
                 </Box>
                 <Box my={{ xs: '4vw', sm: '1vw' }} sx={{ display: 'flex' }} mx={'1vw'}>
@@ -58,7 +58,7 @@ const GenerateCard = () => {
                         <Typography sx={{ fontSize: '1.2vw', color: '#154D4F' }} textAlign='left'>Drusen Images: </Typography>
                     </Box>
                     <Box sx={{ width: {xs: '100%', sm: '70%'} }}>
-                        <TextField name='drusen' label="Number of Drusen OCT Images" variant="standard" fullWidth color='success' type='text' defaultValue='0'/>
+                        <TextField name='drusen' label="Number of Drusen OCT Images" variant="standard" fullWidth color='success' type='number' defaultValue={0}/>
                     </Box>
                 </Box>
                 <Box mt={8} mb={2} sx={{ display: 'flex' }} mx={{ xs: 0, sm: 2 }}>

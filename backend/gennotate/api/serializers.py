@@ -8,8 +8,8 @@ class UserSerializer(ModelSerializer):
 class GeneratedImageSerializer(ModelSerializer):
     class Meta:
         model = GeneratedImage
-        fields = ['id', 'userId', 'link', 'type', 'addToGallery', 'annotations']
+        fields = ['id', 'userId', 'link', 'type', 'generated', 'annotations']
 class SegmentedImageSerializer(ModelSerializer):
     class Meta:
         model = SegmentedImage
-        fields = ['id', 'generatedImageId', 'link', 'annotations']
+        fields = ['id', 'userId', 'generatedImageId', 'link', 'type', 'annotations']
